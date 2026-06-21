@@ -1,0 +1,142 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id             String                @id @default(uuid())
+  email          String                @unique
+  name           String?
+  password       String
+  role           String                @default("USER")
+  xp             Int                   @default(0)
+  streak         Int                   @default(0)
+  lastActive     DateTime              @default(now())
+  createdAt      DateTime              @default(now())
+  emissions      EmissionEntry[]
+  completions    ChallengeCompletion[]
+  achievements   UserAchievement[]
+  posts          CommunityPost[]
+  comments       Comment[]
+  reports        SustainabilityReport[]
+  goals          SmartGoal[]
+}
+
+model EmissionEntry {
+  id               String   @id @default(uuid())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date             DateTime @default(now())
+  carKm            Float    @default(0)
+  bikeKm           Float    @default(0)
+  publicTransportKm Float   @default(0)
+  flightsHours     Float    @default(0)
+  electricityKwh   Float    @default(0)
+  gasLpg           Float    @default(0)
+  diet             String   @default("mixed")
+  shoppingPurchases Float   @default(0)
+  clothingItems    Int      @default(0)
+  totalCO2         Float
+  createdAt        DateTime @default(now())
+}
+
+model Challenge {
+  id          String                @id @default(uuid())
+  title       String
+  description String
+  category    String
+  xpReward    Int                   @default(50)
+  co2Saved    Float
+  qrCode      String?
+  createdAt   DateTime              @default(now())
+  completions ChallengeCompletion[]
+}
+
+model ChallengeCompletion {
+  id          String    @id @default(uuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  challengeId String
+  challenge   Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+  completedAt DateTime  @default(now())
+  verifiedByQR Boolean  @default(false)
+}
+
+model Recommendation {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  category    String
+  co2Saved    Float
+  difficulty  String
+  impactScore Int
+  createdAt   DateTime @default(now())
+}
+
+model Achievement {
+  id          String            @id @default(uuid())
+  title       String
+  description String
+  icon        String
+  xpRequired  Int
+  createdAt   DateTime          @default(now())
+  users       UserAchievement[]
+}
+
+model UserAchievement {
+  id            String      @id @default(uuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievementId String
+  achievement   Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+  unlockedAt    DateTime    @default(now())
+}
+
+model CommunityPost {
+  id        String    @id @default(uuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  content   String
+  category  String
+  likes     Int       @default(0)
+  createdAt DateTime  @default(now())
+  comments  Comment[]
+}
+
+model Comment {
+  id        String        @id @default(uuid())
+  postId    String
+  post      CommunityPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  content   String
+  createdAt DateTime      @default(now())
+}
+
+model SustainabilityReport {
+  id            String   @id @default(uuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  startDate     DateTime
+  endDate       DateTime
+  sustainabilityScore Int  @default(0)
+  aiSummary     String
+  totalEmissions Float
+  createdAt     DateTime @default(now())
+}
+
+model SmartGoal {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category     String
+  targetValue  Float
+  currentValue Float    @default(0)
+  deadline     DateTime
+  isCompleted  Boolean  @default(false)
+  createdAt    DateTime @default(now())
+}
