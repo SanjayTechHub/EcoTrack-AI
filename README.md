@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # EcoTrack AI - Carbon Footprint Awareness Platform
 
 EcoTrack AI is a complete, gamified carbon footprint awareness platform built for climate tech innovation. It allows students, professionals, and families to track, reduce, and offset their carbon emissions through dynamic calculations, interactive daily eco-challenges, an AI coach simulator, community sharing, streaks, and progress visualization.
@@ -102,3 +103,7 @@ EcoTrack-AI/
 - **Phase 2 (Integrations)**: Real-time API linking with Smart Home meters (Nest, Ecobee) and transit trackers (Strava, Google Maps API).
 - **Phase 3 (Enterprise)**: Corporate ESG Dashboard for company-wide sustainability challenges and eco-benefit payouts.
 - **Phase 4 (Hardware)**: EcoTrack IoT smart buttons to register physical recycle events instantly.
+=======
+# EcoTrack-AI
+arbon Footprint Awareness Platform
+>>>>>>> 7935db22983aac38077a975a115e55a130831770
